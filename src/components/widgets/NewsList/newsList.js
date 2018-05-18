@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Button from '../Buttons/buttons';
+import CardInfo from '../CardInfo/cardinfo';
 
 import style from './newsList.css';
 import { URL } from '../../../config';
@@ -10,6 +12,7 @@ import { URL } from '../../../config';
 class NewsList extends Component {
 
     state = {
+        teams:[],
         items:[],
         start:this.props.start,
         end:this.props.start + this.props.amount,
@@ -21,10 +24,22 @@ class NewsList extends Component {
     }
 
     request = (start, end) => {
+        if(this.state.teams.length < 1){
+            axios.get(`${URL}/teams`)
+            .then( response => {
+                this.setState({
+                    teams:response.data
+                })
+            })
+        }
+
+
         axios.get(`${URL}/articles?_start=${start}&_end=${end}`)
         .then( response =>{
             this.setState({
-                items:[...this.state.items, ...response.data]
+                items:[...this.state.items, ...response.data],
+                start,
+                end
             })
         })
     }
@@ -40,13 +55,24 @@ class NewsList extends Component {
         switch(type){
             case('card'):
             template = this.state.items.map((item, i) => (
-                <div>
-                    <div className={style.newsList_item}>
-                        <Link to={`/articles${item.id}`}>
-                            <h2>{item.title}</h2>
-                        </Link>
+                <CSSTransition
+                    classNames={{
+                        enter:style.newsList_wrapper,
+                        enterActive:style.newsList_enter
+                    }}
+                    timeout={500}
+                    key={i}
+                >
+                    <div>
+                        <div className={style.newsList_item}>
+                            <Link to={`/articles${item.id}`}>
+                                <CardInfo teams={this.state.teams} team={item.team} date={item.date}/>
+                                <h2>{item.title}</h2>
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                </CSSTransition>
+                
             ))
                 break;
             default:
@@ -58,14 +84,19 @@ class NewsList extends Component {
 
     render(){
 
-        console.log(this.state.items);
-
         return(
             <div>
-                {this.renderNews( this.props.type )}
-                <div onClick={() => this.loadMore()}>
-                    Load more
-                </div>
+                <TransitionGroup
+                    component="div"
+                    className="list"
+                >
+                    {this.renderNews( this.props.type )}
+                </TransitionGroup>
+                <Button
+                    type="loadmore"
+                    loadMore={() => this.loadMore()}
+                    cta="Load More News"
+                />
             </div>
         )
     }
