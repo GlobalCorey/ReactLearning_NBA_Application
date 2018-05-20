@@ -65,7 +65,7 @@ class NewsList extends Component {
                 >
                     <div>
                         <div className={style.newsList_item}>
-                            <Link to={`/articles${item.id}`}>
+                            <Link to={`/articles/${item.id}`}>
                                 <CardInfo teams={this.state.teams} team={item.team} date={item.date}/>
                                 <h2>{item.title}</h2>
                             </Link>
@@ -73,6 +73,36 @@ class NewsList extends Component {
                     </div>
                 </CSSTransition>
                 
+            ))
+                break;
+            case('image-card'):
+            template = this.state.items.map((item, i) => (
+               <CSSTransition
+                    classNames={{
+                        enter:style.newsList_wrapper,
+                        enterActive:style.newsList_enter
+                    }}
+                    timeout={500}
+                    key={i}
+               >
+                    <Link to={`/articles/${item.id}`} key={i}>
+                        <div className={style.newsListItem_imageWrapper}>
+                            <div className={style.left}
+                                style={{
+                                    background:`url(/images/articles/${item.image})`
+                                }}
+                            >
+                            <div></div>
+                            </div>
+                            
+                            <div className={style.right}>
+                                <CardInfo teams={this.state.teams} team={item.team} date={item.date}/>
+                                <h2>{item.title}</h2>
+                            </div>
+                        </div>
+                    </Link>
+
+                </CSSTransition>
             ))
                 break;
             default:

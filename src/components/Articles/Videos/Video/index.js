@@ -3,6 +3,7 @@ import axios from 'axios';
 import { URL } from '../../../../config';
 import style from '../../articles.css';
 import Header from'./header';
+import VideosRelated from '../../../widgets/VideoList/VideosRelated/videosRelated';
 
 class VideoArticle extends Component {
 
@@ -30,7 +31,6 @@ class VideoArticle extends Component {
     }
 
     getRelated = () => {
-        console.log(this.state);
         axios.get(`${URL}/teams`)
         .then ( response => {
             let teams = response.data
@@ -49,6 +49,10 @@ class VideoArticle extends Component {
         const article = this.state.article;
         const team = this.state.team;
 
+        console.log(article);
+        console.log(team);
+        console.log(this.state.related);
+
         return(
             <div>
                 <Header teamData={team[0]}/>
@@ -61,6 +65,10 @@ class VideoArticle extends Component {
                         src={`https://www.youtube.com/embed/${article.url}`}
                     >
                     </iframe>
+                    <VideosRelated
+                        data={this.state.related}
+                        teams={this.state.teams}
+                    />
                 </div>
 
             </div>

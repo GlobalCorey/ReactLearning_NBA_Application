@@ -6,6 +6,34 @@
 
 }
 
+.newsListItem_imageWrapper h2 {
+    font-size: 12px;
+    color: #525252;
+}
+
+.newsListItem_imageWrapper {
+    display: flex;
+    border-bottom: 2px solid #d5d5d5;
+    background: #fff;
+}
+
+.left {
+    background-size: cover !important;
+}
+
+.left div {
+    width: 90px;
+    height: 90px;
+    background-size: 40px !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+}
+
+.right {
+    flex-grow: 1;
+    padding: 10px;
+}
+
 .newsList_item h2 {
     font-size: 13px;
     line-height: 21px;

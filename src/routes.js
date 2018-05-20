@@ -5,6 +5,8 @@ import Home from './components/Home/home';
 import Layout from './hoc/Layout/layout';
 import NewsArticle from './components/Articles/News/Post/index';
 import VideoArticle from './components/Articles/Videos/Video/index';
+import NewsMain from './components/Articles/News/Main/index';
+import VideoMain from './components/Articles/Videos/Main/index';
 
 //Does this NEED to be a class based component?
     //no state
@@ -16,7 +18,9 @@ class Routes extends Component {
             <Layout>
                 <Switch>
                     <Route path="/" exact component={Home}/>
-                    <Route path="/articles:id" exact component={NewsArticle}/>
+                    <Route path="/news" exact component={NewsMain}/>
+                    <Route path="/videos" exact component={VideoMain}/>
+                    <Route path="/articles/:id" exact component={NewsArticle}/>
                     <Route path="/videos/:id" exact component={VideoArticle}/>
                 </Switch>
             </Layout>
