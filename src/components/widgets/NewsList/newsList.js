@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { firebaseTeams, firebaseArticles, firebaseLooper } from '../../../firebase';
 import Button from '../Buttons/buttons';
 import CardInfo from '../CardInfo/cardinfo';
 
 import style from './newsList.css';
-import { URL } from '../../../config';
+
 
 
 class NewsList extends Component {
@@ -25,28 +25,51 @@ class NewsList extends Component {
 
     request = (start, end) => {
         if(this.state.teams.length < 1){
-            axios.get(`${URL}/teams`)
-            .then( response => {
+
+            firebaseTeams.once('value')
+            .then((snapshot)=>{
+                const teams = firebaseLooper(snapshot);
                 this.setState({
-                    teams:response.data
+                    teams
                 })
             })
+
+
+            // axios.get(`${URL}/teams`)
+            // .then( response => {
+            //     this.setState({
+            //         teams:response.data
+            //     })
+            // })
         }
 
 
-        axios.get(`${URL}/articles?_start=${start}&_end=${end}`)
-        .then( response =>{
+
+        firebaseArticles.orderByChild('id').startAt(start).endAt(end).once('value')
+        .then((snapshot)=>{
+            const articles = firebaseLooper(snapshot);
             this.setState({
-                items:[...this.state.items, ...response.data],
+                items:[...this.state.items, ...articles],
                 start,
                 end
             })
         })
+
+
+        // axios.get(`${URL}/articles?_start=${start}&_end=${end}`)
+        // .then( response =>{
+        //     this.setState({
+        //         items:[...this.state.items, ...response.data],
+        //         start,
+        //         end
+        //     })
+        // })
     }
 
     loadMore = () => {
         let end = this.state.end + this.state.amount;
-        this.request(this.state.end, end);
+        //+ 1 due to mistake in firebase database id for articles
+        this.request(this.state.end +1, end);
     }
 
     renderNews = (type) => {
@@ -65,7 +88,7 @@ class NewsList extends Component {
                 >
                     <div>
                         <div className={style.newsList_item}>
-                            <Link to={`/articles${item.id}`}>
+                            <Link to={`/articles/${item.id}`}>
                                 <CardInfo teams={this.state.teams} team={item.team} date={item.date}/>
                                 <h2>{item.title}</h2>
                             </Link>
@@ -73,6 +96,36 @@ class NewsList extends Component {
                     </div>
                 </CSSTransition>
                 
+            ))
+                break;
+            case('image-card'):
+            template = this.state.items.map((item, i) => (
+               <CSSTransition
+                    classNames={{
+                        enter:style.newsList_wrapper,
+                        enterActive:style.newsList_enter
+                    }}
+                    timeout={500}
+                    key={i}
+               >
+                    <Link to={`/articles/${item.id}`} key={i}>
+                        <div className={style.newsListItem_imageWrapper}>
+                            <div className={style.left}
+                                style={{
+                                    background:`url(/images/articles/${item.image})`
+                                }}
+                            >
+                            <div></div>
+                            </div>
+                            
+                            <div className={style.right}>
+                                <CardInfo teams={this.state.teams} team={item.team} date={item.date}/>
+                                <h2>{item.title}</h2>
+                            </div>
+                        </div>
+                    </Link>
+
+                </CSSTransition>
             ))
                 break;
             default:

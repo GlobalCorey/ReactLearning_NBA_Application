@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { URL } from '../../../../config';
+import { firebaseDB, firebaseTeams, firebaseLooper } from '../../../../firebase';
 import style from '../../articles.css';
 import Header from'./header';
+import VideosRelated from '../../../widgets/VideoList/VideosRelated/videosRelated';
 
 class VideoArticle extends Component {
 
@@ -14,35 +14,54 @@ class VideoArticle extends Component {
     }
 
     componentWillMount(){
-        axios.get(`${URL}/videos?id=${this.props.match.params.id}`)
-        .then( response => {
-            let article = response.data[0];
 
-            axios.get(`${URL}/teams?id=${article.team}`)
-            .then ( response => {
+        firebaseDB.ref(`videos/${this.props.match.params.id}`).once('value')
+        .then((snapshot)=>{
+            let article = snapshot.val();
+
+            firebaseTeams.orderByChild('teamId').equalTo(article.team).once('value')
+            .then((snapshot)=>{
+                let team = firebaseLooper(snapshot);
                 this.setState({
                     article,
-                    team:response.data
+                    team
                 })
-                this.getRelated();
             })
         })
+
+
+        // axios.get(`${URL}/videos?id=${this.props.match.params.id}`)
+        // .then( response => {
+        //     let article = response.data[0];
+
+        //     axios.get(`${URL}/teams?id=${article.team}`)
+        //     .then ( response => {
+        //         this.setState({
+        //             article,
+        //             team:response.data
+        //         })
+        //         this.getRelated();
+        //     })
+        // })
     }
 
     getRelated = () => {
-        console.log(this.state);
-        axios.get(`${URL}/teams`)
-        .then ( response => {
-            let teams = response.data
 
-            axios.get(`${URL}/videos?q=${this.state.team[0].city}&_limit=3`)
-            .then( response =>{
-                this.setState({
-                    teams,
-                    related:response.data
-                })
-            })
-        })
+
+        firebaseDB.ref(`teams`)
+
+        // axios.get(`${URL}/teams`)
+        // .then ( response => {
+        //     let teams = response.data
+
+        //     axios.get(`${URL}/videos?q=${this.state.team[0].city}&_limit=3`)
+        //     .then( response =>{
+        //         this.setState({
+        //             teams,
+        //             related:response.data
+        //         })
+        //     })
+        // })
     }
 
     render(){
@@ -61,6 +80,10 @@ class VideoArticle extends Component {
                         src={`https://www.youtube.com/embed/${article.url}`}
                     >
                     </iframe>
+                    <VideosRelated
+                        data={this.state.related}
+                        teams={this.state.teams}
+                    />
                 </div>
 
             </div>
