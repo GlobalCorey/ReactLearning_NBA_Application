@@ -7,6 +7,7 @@ import NewsArticles from './components/Articles/News/Post/index';
 import VideoArticle from './components/Articles/Videos/Video/index';
 import NewsMain from './components/Articles/News/Main/index';
 import VideoMain from './components/Articles/Videos/Main/index';
+import SignIn from './components/SignIn/signin';
 
 //Does this NEED to be a class based component?
     //no state
@@ -22,6 +23,8 @@ class Routes extends Component {
                     <Route path="/news" exact component={NewsMain}/>
                     <Route path="/videos" exact component={VideoMain}/>
                     <Route path="/videos/:id" exact component={VideoArticle}/>
+                    <Route path="/sign-in" exact component={SignIn}/>
+                    
                 </Switch>
             </Layout>
         )
