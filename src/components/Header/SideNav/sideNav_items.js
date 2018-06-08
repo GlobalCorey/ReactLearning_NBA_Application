@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome';
 import { firebase } from '../../../firebase';
 
 const SideNavItems = (props) => {
-console.log(props);
+// console.log(props);
 
 const items = [
     {
@@ -64,10 +64,14 @@ const element = (item, i) => (
 const restricted = (item, i) =>{
     let template = null;
 
+    //Shows the Sign-In option since item.login is true for item Sign-In
     if(props.user === null && item.login){
         template = element(item, i);
     }
+    //If user is logged in and login == false then we show the sign-out and dashboard option
     if(props.user !== null && !item.login){
+        //If the item's link is sign-out, then we return the sign-out template and provide an onClick
+        // fnc to sign the user out through firebase then kick the user to home
         if(item.link === '/sign-out'){
             template = (
                 <div key={i} 
@@ -84,6 +88,7 @@ const restricted = (item, i) =>{
                 </div>
             )
         }
+        //This case handles items who's link != sign-out (dashboard)
         else{
             template = element(item,i);
         }
