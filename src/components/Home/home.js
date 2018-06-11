@@ -10,7 +10,7 @@ const Home = () => {
             <NewsSlider
                 type="featured"
                 start={0}
-                amount={3}
+                amount={4}
                 settings={{
                     dots:false
                 }}
@@ -18,8 +18,8 @@ const Home = () => {
             <NewsList
                 type="card"
                 loadmore={true}
-                start={3}
-                amount={3}
+                start={0}
+                amount={4}
             />
             <VideoList
                 type="card"

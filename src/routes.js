@@ -10,6 +10,9 @@ import VideoMain from './components/Articles/Videos/Main/index';
 import SignIn from './components/SignIn/signin';
 import Dashboard from './components/Dashboard/dashboard';
 
+import PrivateRoutes from './components/AuthRoutes/privateRoutes';
+import PublicRoutes from './components/AuthRoutes/publicRoutes';
+
 //Does this NEED to be a class based component?
     //no state
     //no lifecycle methods
@@ -18,13 +21,13 @@ const Routes = (props) => {
     return(
         <Layout  user ={props.user}>
             <Switch>
-                <Route path="/" exact component={Home}/>
-                <Route path="/articles/:id" exact component={NewsArticles}/>
-                <Route path="/news" exact component={NewsMain}/>
-                <Route path="/videos" exact component={VideoMain}/>
-                <Route path="/videos/:id" exact component={VideoArticle}/>
-                <Route path="/sign-in" exact component={SignIn}/>
-                <Route path="/dashboard" exact component={Dashboard}/>
+                <PublicRoutes {...props} restricted={false} path="/" exact component={Home}/>
+                <PublicRoutes {...props} restricted={false} path="/articles/:id" exact component={NewsArticles}/>
+                <PublicRoutes {...props} restricted={false} path="/news" exact component={NewsMain}/>
+                <PublicRoutes {...props} restricted={false} path="/videos" exact component={VideoMain}/>
+                <PublicRoutes {...props} restricted={false} path="/videos/:id" exact component={VideoArticle}/>
+                <PublicRoutes {...props} restricted={true} path="/sign-in" exact component={SignIn}/>
+                <PrivateRoutes {...props} path="/dashboard" exact component={Dashboard}/>
                     
             </Switch>
         </Layout>
