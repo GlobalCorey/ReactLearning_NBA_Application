@@ -75,7 +75,7 @@ class Uploader extends Component {
                     this.state.fileUrl ? 
                     <img style={{
                         width:'300px'
-                    }} src={this.state.fileUrl}/>
+                    }} src={this.state.fileUrl} alt={this.state.fileUrl}/>
                     : 
                     null
                 }

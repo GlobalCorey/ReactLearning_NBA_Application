@@ -1,6 +1,6 @@
 import React from 'react';
 import style from '../videoList.css'
-import VideoList from '../videoList';
+// import VideoList from '../videoList';
 import VideoListTemplate from '../videoListTemplate';
 
 
